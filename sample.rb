@@ -51,30 +51,6 @@ def build_tweet(mention)
   texts.sample
 end
 
-def tubo(text)
-  str = []
-  ret = ''
-  $api.sentences(text).each do |sent|
-    m = $api.morphs(sent)
-    phase = -1
-    m.reverse_each do |p|
-      if p['pos'] == 'EOS'
-        phase = 0
-      elsif p['pos'] == '句点'
-        phase = 0
-      elsif phase == 0
-        str << "つぼ"
-        phase = -1
-      end
-      next if p['surface'] == 'EOS' || p['surface'] == 'BOS'
-      str << p['surface']
-    end
-    ret << str.reverse.join
-    str = []
-  end
-  ret
-end
-
 $api = API.new(ENV['JUST_URL'])
 $api.basic_auth(ENV['JUST_USER'], ENV['JUST_PASSWORD']) if ENV['JUST_USER']
 
