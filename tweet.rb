@@ -20,12 +20,20 @@ end
 name = nil
 grade = nil
 keyword = nil
+force = false
 
 OptionParser.new do |opt|
   opt.on('-t BOT_NAME') {|v| name = v }
   opt.on('--grade GRADE') {|v| grade = v.to_i }
   opt.on('--keyword KEYWORD') {|v| keyword = v }
+  opt.on('--force') {|v| force = v }
   opt.parse!(ARGV)
+end
+
+unless force
+  if rand >= (1.0 / 12.0)
+    exit 0 # ツイートタイミング調整
+  end
 end
 
 if name
@@ -39,7 +47,7 @@ else
 end
 
 # grade=0の時75%の確率でTrendからランダムに名刺を取り出す
-if keyword == nil && (grade != 0 || rand(100) < 75)
+if keyword == nil &&  rand(100) < 75
   client = get_twitter(CONFIG)
   seeds = []
   client.local_trends(1117099).to_a.map(&:name).join('。').tap do |name|
@@ -54,6 +62,12 @@ elsif keyword == nil && grade == 0
   if keywords
     keyword = keywords[1..-1].sample
   end
+elsif keyword == nil && grade == 1
+  keywords = File.read(File.expand_path(File.join(__FILE__, '..', 'keywords1.txt'))).strip.split(',')
+  keyword = keywords.sample
+elsif keyword == nil && grade == 2
+  keywords = File.read(File.expand_path(File.join(__FILE__, '..', 'keywords2.txt'))).strip.split(',')
+  keyword = keywords.sample
 end
 
 if keyword == nil

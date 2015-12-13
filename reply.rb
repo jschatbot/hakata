@@ -6,6 +6,11 @@ require 'pp'
 require_relative 'api'
 require_relative 'common'
 
+def fortune
+  text = '今日の運勢は' + %W(大吉 中吉 小吉 吉 半吉 末吉 末小吉 凶 小凶 半凶 末凶 大凶).sample + 'だよ'
+  to_string($api.rewrite(to_chainform($api.morphs(text))))
+end
+
 def build_tweet(mention)
   seeds = []
   mentions = []
@@ -13,6 +18,9 @@ def build_tweet(mention)
     morphs = $api.morphs(sent)
     seeds += morphs.select {|m| m['pos'] =~ /[^代]名詞|感動詞|固有地名/ }
     mentions.push(to_chainform(morphs))
+  end
+  if seeds.select{ |m| m['norm_surface'] == 'みくじ' }
+    return fortune
   end
 
   texts = []
@@ -63,7 +71,6 @@ if name
   grade = rs['grade'] unless grade
   set_rule(grade)
   rs['replies'].each do |r|
-    p r
     t = build_tweet(r['text'].rstrip)
     $api.send_reply(name, r['mention_id'], r['user_name'], t)
   end
