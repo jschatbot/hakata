@@ -99,4 +99,8 @@ class API
            replies: [ { mention_id: mention_id, user_name: user_name,
                         message: message } ] })[0] == 'true'
   end
+
+  def synonym(s)
+    get('/jmat/synonym', { query: s })['groups']
+  end
 end
