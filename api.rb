@@ -6,10 +6,14 @@ require 'uri'
 require 'json'
 
 class API
+  attr_accessor :scenario_file, :rewrite_file
+
   def initialize(base, proxy_host=nil, proxy_port=nil)
     @base = base
     @proxy_host = proxy_host
     @proxy_port = proxy_port
+    @scenario_file = nil
+    @rewrite_file = nil
   end
 
   def basic_auth(user, passwd)
@@ -63,11 +67,13 @@ class API
   end
 
   def rewrite(morphs)
-    post('/tk/rewrite', { rule: 'rewrite_c04.txt', morphs: morphs })['morphs']
+    p ['rewrite', @rewrite_file]
+    post('/tk/rewrite', { rule: @rewrite_file, morphs: morphs })['morphs']
   end
 
   def trigger(morphs)
-    post('/tk/trigger', { rule: 'scenario_c04.txt', morphs: morphs })['texts']
+    p ['scenario', @scenario_file]
+    post('/tk/trigger', { rule: @scenario_file, morphs: morphs })['texts']
   end
 
   def search_tweet(query)
