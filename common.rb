@@ -18,7 +18,7 @@ end
 
 def set_rule(grade)
   if grade == 0
-    $api.scenario_file = 'scenario_c00.txt'
+    $api.scenario_file = '3_scenario_grade0.txt'
     $api.rewrite_file = '3_rewrite_grade0.txt'
   elsif grade == 1
     $api.scenario_file = '3_scenario_grade1.txt'
