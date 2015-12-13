@@ -4,14 +4,7 @@
 require 'optparse'
 require 'pp'
 require_relative 'api'
-
-def to_chainform(morphs)
-  morphs.map {|m| m['norm_surface'] + ':' + m['pos'] }
-end
-
-def to_string(chain)
-  chain[1...-1].map {|m| m.split(/:/)[0] }.join
-end
+require_relative 'common'
 
 def build_tweet(mention)
   seeds = []
@@ -47,16 +40,6 @@ def build_tweet(mention)
   p texts
   single_text = texts.sample
   single_text.map{ |a| to_string($api.rewrite(a)) }.join(' ')
-end
-
-def set_rule(grade)
-  if grade == 0
-    $api.scenario_file = 'scenario_c00.txt'
-    $api.rewrite_file = 'rewrite_c00.txt'
-  else
-    $api.scenario_file = 'scenario_c04.txt'
-    $api.rewrite_file = 'rewrite_c04.txt'
-  end
 end
 
 $api = API.new(ENV['JUST_URL'])
