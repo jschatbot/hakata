@@ -5,6 +5,6 @@ twitter:
   access_token_secret: ''
 proxy: '不要だったらこの行ごと消去'
 api:
-  host: ''
+  url: ''
   basic_user: ''
   basic_password: ''
