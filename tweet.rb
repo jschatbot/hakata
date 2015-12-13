@@ -17,10 +17,15 @@ def build_tweet(keyword)
   to_string($api.rewrite($api.markov_chain(morphs[1])))
 end
 
+def build_tweet_by_text(text)
+  to_string($api.rewrite(to_chainform($api.morphs(text))))
+end
+
 name = nil
 grade = nil
 keyword = nil
 force = false
+text = nil
 
 OptionParser.new do |opt|
   opt.on('-t BOT_NAME') {|v| name = v }
@@ -28,6 +33,22 @@ OptionParser.new do |opt|
   opt.on('--keyword KEYWORD') {|v| keyword = v }
   opt.on('--force') {|v| force = v }
   opt.parse!(ARGV)
+end
+
+
+if Time.now.hour == 0 && Time.now.minute == 0
+  force = true
+  keyword = 'よるほー'
+end
+
+if Time.now.hour == 12 && Time.now.minute == 0
+  force = true
+  keyword = 'ひるほー'
+end
+
+if rand(120) == 0 ## 120分に1度ぐらいの頻度だと良いなあ…
+  text = 'おみくじってリプライを送るとおみくじを返します'
+  foce = true
 end
 
 unless force
@@ -74,8 +95,16 @@ if keyword == nil
   exit
 end
 
-if name
-  $api.send_tweet(name, build_tweet(keyword))
+if text
+  if name
+    $api.send_tweet(name, build_tweet_by_text(text))
+  else
+    puts build_tweet_by_text(text)
+  end
 else
-  puts build_tweet(keyword)
+  if name
+    $api.send_tweet(name, build_tweet(keyword))
+  else
+    puts build_tweet(keyword)
+  end
 end
