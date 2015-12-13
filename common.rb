@@ -21,10 +21,10 @@ def set_rule(grade)
     $api.scenario_file = 'scenario_c00.txt'
     $api.rewrite_file = '3_rewrite_grade0.txt'
   elsif grade == 1
-    $api.scenario_file = 'scenario_c04.txt'
+    $api.scenario_file = '3_scenario_grade1.txt'
     $api.rewrite_file = 'rewrite_c04.txt'
   else
-    $api.scenario_file = 'scenario_c04.txt'
+    $api.scenario_file = '3_scenario_grade2.txt'
     $api.rewrite_file = '3_rewrite_grade2.txt'
   end
 end

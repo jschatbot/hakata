@@ -54,13 +54,11 @@ elsif keyword == nil && grade == 0
   if keywords
     keyword = keywords[1..-1].sample
   end
-
 end
 
 if keyword == nil
   exit
 end
-
 
 if name
   $api.send_tweet(name, build_tweet(keyword))
