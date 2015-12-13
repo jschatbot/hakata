@@ -1,14 +1,16 @@
 # hakata bot
-## 環境変数
-```
-JUST_URL ChatサーバーのURL
-JUST_USER ChatサーバーのBasic認証のユーザー名
-JUST_PASSWORD ChatサーバーのBasic認証のパスワード
-```
+## 初期設定
+config.yaml.sampleを参考にconfig.yamlを作成してください。
+
 ## 使い方
 リプライ
 ```
 $ ruby reply.rb (--grade グレード) (-t ボット名)
+```
+
+自動ツイート
+```
+$ ruby tweet.rb (--grade グレード) (-t ボット名) (-k キーワード)
 ```
 
 

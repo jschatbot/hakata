@@ -7,8 +7,7 @@ require 'pp'
 require_relative 'api'
 require_relative 'common'
 
-$api = API.new(ENV['JUST_URL'])
-$api.basic_auth(ENV['JUST_USER'], ENV['JUST_PASSWORD']) if ENV['JUST_USER']
+$api = get_api(CONFIG)
 
 # Keywordを元にマルコフ連鎖してツイートを作成する
 def build_tweet(keyword)
@@ -30,8 +29,7 @@ end
 
 # 50%の確率でTrendからランダムに名刺を取り出す
 if keyword == nil && rand(100) <= 50
-  config = YAML.load(File.read(File.join(File.dirname(__FILE__), './config.yaml')))
-  client = get_client(config)
+  client = get_twitter(CONFIG)
   seeds = []
   client.local_trends(1117099).to_a.map(&:name).join('。').tap do |name|
     $api.sentences(name).each do |sent|

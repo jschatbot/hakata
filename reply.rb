@@ -42,8 +42,7 @@ def build_tweet(mention)
   single_text.map{ |a| to_string($api.rewrite(a)) }.join(' ')
 end
 
-$api = API.new(ENV['JUST_URL'])
-$api.basic_auth(ENV['JUST_USER'], ENV['JUST_PASSWORD']) if ENV['JUST_USER']
+$api = get_api(CONFIG)
 name = nil
 grade = nil
 
