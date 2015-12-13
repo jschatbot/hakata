@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8; mode: ruby -*-
 
+require 'date'
 require 'yaml'
 require 'optparse'
 require 'pp'
@@ -27,8 +28,18 @@ OptionParser.new do |opt|
   opt.parse!(ARGV)
 end
 
-# 50%の確率でTrendからランダムに名刺を取り出す
-if keyword == nil && rand(100) <= 50
+if name
+  rs = $api.get_reply(name)
+  STDERR.puts "grade: #{rs['grade']}"
+  grade = rs['grade'] unless grade
+  set_rule(grade)
+else
+  grade = 0 unless grade
+  set_rule(grade)
+end
+
+# grade=0の時75%の確率でTrendからランダムに名刺を取り出す
+if keyword == nil && (grade != 0 || rand(100) < 75)
   client = get_twitter(CONFIG)
   seeds = []
   client.local_trends(1117099).to_a.map(&:name).join('。').tap do |name|
@@ -38,18 +49,21 @@ if keyword == nil && rand(100) <= 50
     end
   end
   keyword = seeds.sample['norm_surface']
+elsif keyword == nil && grade == 0
+  keywords = File.read(File.expand_path(File.join(__FILE__, '..', 'keywords.txt'))).lines.map{|a|a.chomp.split(',')}.select{|a,b| Date.parse(a) == Date.today}.first
+  if keywords
+    keyword = keywords[1..-1].sample
+  end
+
 end
 
-keyword ||= 'クリスマス'
+if keyword == nil
+  exit
+end
+
 
 if name
-  rs = $api.get_reply(name)
-  STDERR.puts "grade: #{rs['grade']}"
-  grade = rs['grade'] unless grade
-  set_rule(grade)
   $api.send_tweet(name, build_tweet(keyword))
 else
-  grade = 0 unless grade
-  set_rule(grade)
   puts build_tweet(keyword)
 end
