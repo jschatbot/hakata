@@ -28,24 +28,25 @@ def build_tweet(mention)
     ss.each do |s|
       p s
       c = $api.markov_chain(s)
-      texts.push(to_string($api.rewrite(c))) unless c.empty?
+      texts.push([c]) unless c.empty?
     end
   end
   mentions.each {|m| $api.trigger(m).each {|t| texts.push(t) } }
   seeds.each do |s|
     $api.search_tweet(s['norm_surface']).map do |t|
       texts.push($api.sentences(t.chomp).map do |sent|
-                   to_string($api.rewrite(to_chainform($api.morphs(sent))))
-                  end.join(' '))
+                   to_chainform($api.morphs(sent))
+                  end)
     end
     $api.search_reply(s['norm_surface']).map do |t|
       texts.push($api.sentences(t.chomp).map do |sent|
-                   to_string($api.rewrite(to_chainform($api.morphs(sent))))
-                  end.join(' '))
+                   to_chainform($api.morphs(sent))
+                  end)
     end
   end
   p texts
-  texts.sample
+  single_text = texts.sample
+  single_text.map{ |a| to_string($api.rewrite(a)) }.join(' ')
 end
 
 def set_rule(grade)
@@ -75,6 +76,7 @@ if name
   grade = rs['grade'] unless grade
   set_rule(grade)
   rs['replies'].each do |r|
+    p r
     t = build_tweet(r['text'].rstrip)
     $api.send_reply(name, r['mention_id'], r['user_name'], t)
   end
