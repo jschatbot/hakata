@@ -16,6 +16,7 @@ def build_tweet(mention)
   end
 
   texts = []
+  scenarios = []
   5.times do
     ss = seeds.empty? ? [{ 'norm_surface' => 'BOS', 'pos' => 'BOS' }] : seeds
     ss.each do |s|
@@ -24,7 +25,7 @@ def build_tweet(mention)
       texts.push([c]) unless c.empty?
     end
   end
-  mentions.each {|m| $api.trigger(m).each {|t| texts.push(t) } }
+  mentions.each {|m| $api.trigger(m).each {|t| scenarios.push(t) } }
   seeds.each do |s|
     $api.search_tweet(s['norm_surface']).map do |t|
       texts.push($api.sentences(t.chomp).map do |sent|
@@ -37,8 +38,12 @@ def build_tweet(mention)
                   end)
     end
   end
-  p texts
   single_text = texts.sample
+  p [:scenario, scenarios]
+  if scenarios.size > 0 && rand(2) == 0
+    p '[select scenario]'
+    return scenarios.sample
+  end
   single_text.map{ |a| to_string($api.rewrite(a)) }.join(' ')
 end
 
