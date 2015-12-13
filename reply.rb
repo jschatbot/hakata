@@ -19,7 +19,7 @@ def build_tweet(mention)
     seeds += morphs.select {|m| m['pos'] =~ /[^代]名詞|感動詞|固有地名/ }
     mentions.push(to_chainform(morphs))
   end
-  if seeds.select{ |m| m['norm_surface'] == 'みくじ' }
+  if seeds.select{ |m| m['norm_surface'] == 'みくじ' }.size > 0
     return fortune
   end
 
