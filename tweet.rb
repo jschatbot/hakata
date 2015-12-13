@@ -43,7 +43,7 @@ end
 
 if Time.now.hour == 12 && Time.now.minute == 0
   force = true
-  keyword = 'ひるほー'
+  text = 'ひるほー'
 end
 
 if rand(120) == 0 ## 120分に1度ぐらいの頻度だと良いなあ…
@@ -68,8 +68,8 @@ else
 end
 
 # grade=0の時75%の確率でTrendからランダムに名刺を取り出す
+client = get_twitter(CONFIG)
 if keyword == nil &&  rand(100) < 75
-  client = get_twitter(CONFIG)
   seeds = []
   client.local_trends(1117099).to_a.map(&:name).join('。').tap do |name|
     $api.sentences(name).each do |sent|
@@ -104,6 +104,7 @@ if text
 else
   if name
     $api.send_tweet(name, build_tweet(keyword))
+    client.update_profile(description: (grade > 0 ? '人工無脳ですたい。リプを飛ばして遊んでくれると嬉しかとです。' : '人工無脳ですつぼ。たくさ>ん話しかけると進化しますつぼ。'))
   else
     puts build_tweet(keyword)
   end
