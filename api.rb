@@ -42,7 +42,7 @@ class API
     http.open_timeout = 5
     http.read_timeout = 120
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http.use_ssl = true
+    http.use_ssl = uri.scheme == 'https'
     res = nil
     http.start { res = http.request(req) }
     case res
