@@ -36,19 +36,19 @@ OptionParser.new do |opt|
 end
 
 
-if Time.now.hour == 0 && Time.now.minute == 0
+if Time.now.hour == 0 && Time.now.min == 0
   force = true
   keyword = 'よるほー'
 end
 
-if Time.now.hour == 12 && Time.now.minute == 0
+if Time.now.hour == 12 && Time.now.min == 0
   force = true
   text = 'ひるほー'
 end
 
 if rand(120) == 0 ## 120分に1度ぐらいの頻度だと良いなあ…
   text = 'おみくじってリプライを送るとおみくじを返します'
-  foce = true
+  force = true
 end
 
 unless force
